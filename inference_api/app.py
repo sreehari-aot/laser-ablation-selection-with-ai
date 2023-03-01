@@ -1,9 +1,11 @@
+import os
 import joblib
 from flask import Flask, request
 from operator import itemgetter
 from flask_cors import CORS
+from flask import send_from_directory
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='ui/build')
 CORS(app)
 
 extreme_gb = './models/ExtremeGB.pkl'
@@ -23,6 +25,14 @@ model_dict = {
     "RANDOM_FOREST": random_forest,
     "SVM": svm
 }
+
+@app.route('/', defaults={'path': ''})
+@app.route('/<path:path>')
+def serve(path):
+    if path != "" and os.path.exists(app.static_folder + '/' + path):
+        return send_from_directory(app.static_folder, path)
+    else:
+        return send_from_directory(app.static_folder, 'index.html')
 
 @app.get("/models")
 def get_models():
