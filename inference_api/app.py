@@ -1,7 +1,10 @@
 import joblib
 from flask import Flask, request
 from operator import itemgetter
+from flask_cors import CORS
+
 app = Flask(__name__)
+CORS(app)
 
 extreme_gb = './models/ExtremeGB.pkl'
 gradient_boost = './models/GradientBoost.pkl'
